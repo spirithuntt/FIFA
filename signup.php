@@ -32,7 +32,7 @@ include ("./controllers/Userimp.php");
                     $user->create();
                 }
                 ?>
-                <h1 class="text-start text-white">Log In</h1>
+                <h1 class="text-start text-white">Sign up</h1>
                 <p class="text-white mb-4">Login with your account to access</p>
             <form method="POST">
             <div class="mb-3">
@@ -60,7 +60,7 @@ include ("./controllers/Userimp.php");
                 </div>
                 <div class="mt-3">
                 <p class="mb-0  text-center text-light">You already have an account? <a href="login.php"
-                        class="text-white fw-bold"> Sign Up</a></p>
+                        class="text-white fw-bold"> Log In</a></p>
             </div>
             </form>
             </div>

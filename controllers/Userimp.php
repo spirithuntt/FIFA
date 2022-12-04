@@ -2,6 +2,7 @@
 <?php
 include('./models/db.php');
 include('./controllers/User.php');
+include('./config/passwords.php');
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
@@ -11,7 +12,7 @@ class Userimp extends Database implements CRUD
     private $lname;
     private $email;
     private $password;
-
+    private $token;
     private $password_comfirm;
 
 
@@ -59,6 +60,15 @@ class Userimp extends Database implements CRUD
     {
         $this->password_comfirm = $password;
     }
+    // token getter and setter
+    public function getToken()
+    {
+        return $this->token;
+    }
+    public function setToken($token)
+    {
+        $this->token = $token;
+    }
 
     private function sanitize($data)
     {
@@ -66,6 +76,28 @@ class Userimp extends Database implements CRUD
             $data = stripslashes($data);
             $data = htmlspecialchars($data);
             return $data;
+    }
+
+    // method to verify the token and set the user to active to 1
+
+    public function verifyEmail(){
+        // search for the token in the database
+        $sql = "SELECT * FROM users WHERE token = :token";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam(':token', $this->token);
+        $stmt->execute();
+        $num = $stmt->rowCount();
+        if($num > 0){
+            // update the user to active
+            $sql = "UPDATE users SET isactive = 1 WHERE token = :token";
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->bindParam(':token', $this->token);
+            $stmt->execute();
+            // redirect to login page
+            header('location: verfiedtoken.php?verified=1');
+        }else{
+            header('location: verfiedtoken.php?verified=0');
+        }
     }
 
     public function create()
@@ -90,17 +122,18 @@ class Userimp extends Database implements CRUD
                 echo "Email already taken";
             }else{
             // :is placeholder
-                $sql = "INSERT INTO users (fname, lname, email,  password) VALUES (:fname, :lname, :email,  :password)";
+                $this->token = md5(rand().time());
+                $sql = "INSERT INTO users (fname, lname, email, token,  password) VALUES (:fname, :lname, :email, :token, :password)";
                 $stmt = $this->connect()->prepare($sql);
                 // pass their value as input, and receives the output value
                 $stmt->bindParam(':fname', $this->fname);
                 $stmt->bindParam(':lname', $this->lname);
                 $stmt->bindParam(':email', $this->email);
+                $stmt->bindParam(':token', $this->token);
                 $stmt->bindParam(':password', $this->password);
                 if($stmt->execute()){
-                        $token = md5(rand().time());
                         $msg = 'Click on the activation link to verify your email. <br><br>
-                        <a href="http://e-class.imranechaibi.com/user_verificaiton.php?token='.$token.'"> Click here to verify email</a>
+                        <a href="http://localhost/FIFA/verifytoken.php?token='.$this->token.'"> Click here to verify email</a>
                     ';
 
                         
@@ -116,20 +149,20 @@ class Userimp extends Database implements CRUD
                         //Server settings
                         $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
                         $mail->isSMTP();                                            //Send using SMTP
-                        $mail->Host       = 'smtp.hostinger.com';                     //Set the SMTP server to send through
+                        $mail->Host       = $smtphost;                     //Set the SMTP server to send through
                         $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-                        $mail->Username   = 'contact@imranechaibi.com';                     //SMTP username
-                        $mail->Password   = 'hola1234HOLA@#';                               //SMTP password
+                        $mail->Username   = $smtpusername;                     //SMTP username
+                        $mail->Password   = $smtppassword;                               //SMTP password
                         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
                         $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
-                        $mail->From = 'contact@imranechaibi.com';
-                        $mail->Sender = 'contact@imranechaibi.com';
+                        $mail->From = $smtpusername;
+                        $mail->Sender = $smtpusername;
                         //Recipients
-                        $mail->setFrom('contact@imranechaibi.com', 'imranechaibi');
-                        $mail->addAddress($email, 'E-class team');     //Add a recipient
+                        $mail->setFrom($smtpusername, 'Fifa 2022');
+                        $mail->addAddress($this->email, 'Fifa team');     //Add a recipient
                         //$mail->addAddress('ellen@example.com');               //Name is optional
-                        $mail->addReplyTo('contact@imranechaibi.com', 'imrane chaibi');
+                        $mail->addReplyTo($smtpusername, 'fifa team');
                         //$mail->addCC('cc@example.com');
                         //$mail->addBCC('bcc@example.com');
 
@@ -139,8 +172,8 @@ class Userimp extends Database implements CRUD
 
                         //Content
                         $mail->isHTML(true);                                  //Set email format to HTML
-                        $mail->Subject = $firstname;
-                        $mail->Body    = $email."<br>".$msg;
+                        $mail->Subject = "welcome to fifa 2022 ".$this->fname;
+                        $mail->Body    = $this->email."<br>".$msg;
                         //$mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
                         $mail->send();
@@ -148,7 +181,7 @@ class Userimp extends Database implements CRUD
                     } catch (Exception $e) {
                         // echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
                     }
-                    header('location:index.php');
+                    header('Location: ./index.php?verify=true');
                 }
             }
         
@@ -156,6 +189,59 @@ class Userimp extends Database implements CRUD
             echo "passwords dont match";
         }
 
+    }
+    // login method
+    public function login()
+    {
+        $this->email = $this->sanitize($this->email);
+        $this->password = trim($this->password);
+        if(empty($this->email) || empty($this->password))
+        {
+            echo "Please fill all the inputs";
+        }else{
+            $sql = "SELECT * FROM users WHERE email = :email";
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->bindParam(':email', $this->email);
+            $stmt->execute();
+            $num = $stmt->rowCount();
+            if($num > 0){
+                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                if(password_verify($this->password, $row['password'])){
+                    if($row['isactive'] == 1){
+                        $_SESSION['id'] = $row['id'];
+                        $_SESSION['fname'] = $row['fname'];
+                        $_SESSION['lname'] = $row['lname'];
+                        $_SESSION['email'] = $row['email'];
+                        $_SESSION['isadmin'] = $row['isadmin'];
+                        $_SESSION['isactive'] = $row['isactive'];
+                        $_SESSION['logged'] = true;
+                        header('location: ./index.php');
+                    }else{
+                        echo "Please verify your email";
+                    }
+                }else{
+                    echo "Wrong password";
+                }
+            }else{
+                echo "Email not found";
+            }
+        }
+    }
+    // logout method
+    public function logout()
+    {
+        session_destroy();
+        header('location: ./login.php');
+    }
+    // method to update user to admin
+    public function updateAdmin()
+    {
+        $sql = "UPDATE users SET isadmin = 1 WHERE email = :email";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam(':email', $this->email);
+        if($stmt->execute()){
+            header('location: ./admin.php');
+        }
     }
 
 }

@@ -1,4 +1,9 @@
-
+<?php
+include ("./controllers/Userimp.php");
+include ("./middlewares/isLoggedin.php");
+// creating a an instance of the class islogedin
+$islogedin = new IslogedIn();
+?>
 <html lang="en">
 
     <head>
@@ -17,6 +22,14 @@
     <main class="row col-12 mx-0">
             <div class="col-12 col-md-12 col-lg-4 col-sm-12 fullheight background px-5 bg-danger">
                 <div class="d-flex flex-column justify-content-center mt-5 sh">
+                <?php
+    if(isset($_POST['submit'])){
+    $user = new Userimp;
+    $user->setEmail($_POST['email']);
+    $user->setPassword($_POST['password']);
+    $user->login();
+}
+?>
                     <h1 class="text-start text-white">Log In</h1>
                     <p class="text-white mb-4">Login with your account to access</p>
                 <form method="POST">
@@ -30,7 +43,7 @@
                 </div>
                     <p class="small"><a class="text-danger" href="forget-password.html">Forgot password?</a></p>
                     <div class="d-grid">
-                        <button class="btn btn-danger" type="submit">Login</button>
+                        <button class="btn btn-danger" type="submit"name="submit" >Login</button>
                     </div>
                     <div class="mt-3">
                     <p class="mb-0  text-center text-light">Don't have an account? <a href="signup.php"
