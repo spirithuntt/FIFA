@@ -4,3 +4,5 @@ include('./controllers/Userimp.php');
 $user = new Userimp();
 // calling the logout method
 $user->logout();
+
+header('location: ./login.php');

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bootstrap v5.2 Design Login Forms</title>
+    <title>FIFA 2022</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
@@ -75,7 +75,12 @@
   <button class="card-body bg-light rounded">
     <h5 class="card-title text-secondary">Tickets starting at</h5>
     <h1 class="display-6">$. 220</h1>
-    <a href="#" class="btn btn-danger">Reserve your  E-Tickets</a>
+    <select class="form-select w-50 ms-5" aria-label="Default select example">
+  <option value="Qty1">1</option>
+  <option value="Qty2">2</option>
+  <option value="Qty3">3</option>
+</select>
+    <a href="#" class="btn btn-danger mt-3">Reserve your E-Tickets</a>
   </button>
 </div>
 </div>

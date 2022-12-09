@@ -21,25 +21,3 @@
 .input{
     border-color: white!important;
 }
-/* For mobile : like samsung grand(480 * 800): */
-
-@media only screen 
-    and (max-device-width : 480px)
-    {
-    }
-
-/* 
-For iphone: */
-
-@media only screen 
-and (max-device-width : 320px) 
- {
-    
- } 
-
-
-/* For ipad: */
-@media screen and (min-width:760px)
- {
-
- }

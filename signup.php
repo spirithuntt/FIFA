@@ -1,5 +1,8 @@
 <?php
 include ("./controllers/Userimp.php");
+include("./middlewares/isLoggedin.php");
+$islogedin = new IslogedIn();
+var_dump($_SESSION);
 ?>
 
 <html lang="en">
@@ -8,7 +11,7 @@ include ("./controllers/Userimp.php");
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bootstrap v5.2 Design Login Forms</title>
+    <title>FIFA 2022</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
         <link rel="stylesheet" href="assets/css/style.css">
@@ -59,7 +62,7 @@ include ("./controllers/Userimp.php");
                     <button class="btn btn-danger mt-3" type="submit" name="submit">Sign Up</button>
                 </div>
                 <div class="mt-3">
-                <p class="mb-0  text-center text-light">You already have an account? <a href="login.php"
+                <p class="mb-0  text-center text-light">You already have an account? <a
                         class="text-white fw-bold"> Log In</a></p>
             </div>
             </form>
