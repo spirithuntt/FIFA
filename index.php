@@ -4,5 +4,3 @@ include('./middlewares/isLoggedin.php');
 $islogedin = new IslogedIn();
 echo'welcome';
 var_dump($_SESSION);
-
-// creating a an instance of the class isadmin

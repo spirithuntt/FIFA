@@ -62,8 +62,8 @@ var_dump($_SESSION);
                     <button class="btn btn-danger mt-3" type="submit" name="submit">Sign Up</button>
                 </div>
                 <div class="mt-3">
-                <p class="mb-0  text-center text-light">You already have an account? <a
-                        class="text-white fw-bold"> Log In</a></p>
+                <p class="mb-0  text-center text-light">You already have an account? 
+                <a class="text-white fw-bold" href="login.php"> Log In</a></p>
             </div>
             </form>
             </div>

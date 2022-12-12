@@ -12,7 +12,7 @@ if (isset($_GET['token'])) {
 }
 
 if ($verified) {
-    echo "Your email has been verified";
+    echo "Your email has been verified just close this tab and login";
 }else{
     echo "Your email could not be verified";
 }

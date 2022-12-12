@@ -20,38 +20,33 @@ include("./middlewares/isLoggedin.php");
     <?php
 
     //fetch data from database
-    $user = new Userimp();
-    $user->setId($_SESSION['id']);
-    $user->showUser();
-
-
-
-
-
-
-
-
-
-    // if (isset($_SESSION['id'])) {
-    //     $user = new Userimp();
-    //     $user->setId($_SESSION['id']);
-    //     >showUser();
-    
-    // }
-    if (isset($_POST['submit'])){
+    if(isset($_SESSION['id'])){
         $user = new Userimp();
-        $user->setFirst_name($_POST['firstname']);
-        $user->setLast_name((($_POST['lname'])));
-        $user->setEmail((($_POST['email'])));
-        $user->setPassword((($_POST['password'])));
-        $user->setId((($_POST['id'])));
+        $user->setId($_SESSION['id']);
+        $user->showUser();
+    }
+    if(!isset($_SESSION['id'])){
+        echo '<div class="alert alert-danger">
+            your account has been deleted please sign up again.
+            <a class="btn btn-dark" href="signup.php">sign up</a>
+        </div>';
+    }
+    if (isset($_POST['update'])){
+        $user = new Userimp();
+        $user->setFirst_name($_POST['fname']);
+        $user->setLast_name($_POST['lname']);
+        $user->setEmail($_POST['email']);
+        $user->setPassword($_POST['password']);
+        $user->setId($_SESSION['id']);
+        $user->setPassword_com($_POST['password_comfirm']);
         $user->updateUser();
     }
-    if (isset($_POST['delete'])) {
+    if(isset($_POST['delete'])){
+        //show user session id
         $user = new Userimp();
-        $user->setId((($_POST['id'])));
+        $user->setId($_SESSION['id']);
         $user->deleteUser();
     }
-    ?>
+?>
 </body>
 </html>

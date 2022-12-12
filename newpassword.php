@@ -60,7 +60,7 @@ if (isset($_GET['token'])) {
                         </div>
                         <div class="mb-3">
                             <label  class="form-label text-white">Repeat Password</label>
-                            <input type="repeatpassword" class="input form-control border border-dark" id="repeatpassword" name="repeatpassword">
+                            <input type="password" class="input form-control border border-dark" id="repeatpassword" name="repeatpassword">
                         </div>
                             <div class="d-grid">
                                 <button class="btn btn-danger" type="submit" name="submit" >click to reset </button>

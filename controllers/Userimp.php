@@ -393,43 +393,43 @@ class Userimp extends Database implements CRUD
     }
     public function showUser()
     {
-        $sql = "SELECT * FROM users WHERE id = :id";
-        $stmt = $this->connect()->prepare($sql);
-        $stmt->bindParam(':id', $this->id);
-        $stmt->execute();
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        //concatinate in the table and fetch the table
-        $this->fname = $row['fname'];
-        $this->lname = $row['lname'];
-        $this->email = $row['email'];
-        $this->password = $row['password'];
-        echo '<div class="container">
-        <div class="row">
+            $sql = "SELECT * FROM users WHERE id = :id";
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->bindParam(':id', $this->id);
+            $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            //concatinate in the table and fetch the table
+            $this->fname = $row['fname'];
+            $this->lname = $row['lname'];
+            $this->email = $row['email'];
+            $this->password = $row['password'];
+            echo '<div class="container p-5 bg-danger fullheight">
+        <div class="row d-flex justify-content-center">
             <div class="col-md-6">
-                <form action="" method="post">
-                    <div class="form-group">
-                        <label for="fname">First Name</label>
-                        <input type="text" name="fname" id="fname" class="form-control" value="'.$this->fname.'">
+                <form method="post">
+                    <div class="form-group p-4">
+                        <label class = "text-light" for="fname">First Name</label>
+                        <input type="text" name="fname" id="fname" class="form-control" value="' . $this->fname . '">
                         </div>
-                        <div class="form-group
-                        <label for="lname">Last Name</label>
-                        <input type="text" name="lname" id="lname" class="form-control" value="'.$this->lname.'">
+                        <div class="form-group p-4">
+                        <label class = "text-light" for="lname">Last Name</label>
+                        <input type="text" name="lname" id="lname" class="form-control" value="' . $this->lname . '">
                         </div>
-                        <div class="form-group
-                        <label for="email">Email</label>
-                        <input type="email" name="email" id="email" class="form-control" value="'.$this->email.'">
+                        <div class="form-group p-4">
+                        <label class = "text-light" for="email">Email</label>
+                        <input type="email" name="email" id="email" class="form-control" value="' . $this->email . '">
                         </div>
-                        <div class="form-group
-                        <label for="password">Password</label>
-                        <input type="password" name="password" id="password" class="form-control" value="'.$this->password.'">
+                        <div class="form-group p-4">
+                        <label class = "text-light" for="password">Password</label>
+                        <input type="password" name="password" id="password" class="form-control" value="' . $this->password . '">
                         </div>
-                        <div class="form-group
-                        <label for="password_comfirm">Confirm Password</label>
-                        <input type="password" name="password_comfirm" id="password_comfirm" class="form-control" value="'.$this->password.'">
+                        <div class="form-group p-4">
+                        <label class = "text-light" for="password_comfirm">Confirm Password</label>
+                        <input type="password" name="password_comfirm" id="password_comfirm" class="form-control" value="' . $this->password . '">
                         </div>
-                        <div class="form-group
-                        <button type="submit" name="update" value="update" class="btn btn-primary">Update User</button>
-                        <button type="submit" name="delete" value="delete" class="btn btn-danger">Delete User</button>
+                        <div class="form-group d-flex justify-content-center">
+                        <button type="submit" name="update" value="update" class="btn btn-primary m-4">Update User</button>
+                        <button type="submit" name="delete" value="delete" class="btn btn-danger m-4">Delete User</button>
                         </div>
                         </form>
                         </div>
@@ -437,43 +437,60 @@ class Userimp extends Database implements CRUD
                         </div>';
     }
     public function updateUser()
-    {
+{
+        if(!empty($this->fname) && !empty($this->lname) && !empty($this->email) && !empty($this->password) && !empty($this->password_comfirm))
+        {
+            $this->fname = $this->sanitize($this->fname);
+            $this->lname = $this->sanitize($this->lname);
+            $this->password = $this->sanitize($this->password);
+            $this->password_comfirm = $this->sanitize($this->password_comfirm);
+            $this->email = filter_var($this->email, FILTER_SANITIZE_EMAIL);
+        //update the user
         $sql = "UPDATE users SET fname = :fname, lname = :lname, email = :email, password = :password WHERE id = :id";
+        //hash the password
         $stmt = $this->connect()->prepare($sql);
         $stmt->bindParam(':fname', $this->fname);
         $stmt->bindParam(':lname', $this->lname);
         $stmt->bindParam(':email', $this->email);
-        $stmt->bindParam(':password', $this->password);
         $stmt->bindParam(':id', $this->id);
-        if ($stmt->execute()){
+        if(!empty($this->password) && strlen($this->password) > 8 && $this->password == $this->password_comfirm){
+            $this->password = password_hash($this->password, PASSWORD_DEFAULT);
+            $stmt->bindParam(':password', $this->password);
+        if($stmt->execute()){
             echo '<div class="alert alert-success">
-            your changes have been saved.
-        </class=>';
-        } else {
+            your changes have been saved.';
+        }else{
             echo '<div class="alert alert-warning">
             something happened please try again.
         </div>';
         }
+        } else{
+            echo '<div class="alert alert-warning">
+            Passwords do not match or empty';
+        }
     }
+    else{
+        echo '<div class="alert alert-warning">
+        please fill all the fields';
+    }
+}
 
 //method to delete profile
     public function deleteUser()
     {
+        //remove the user from the database
         $sql = "DELETE FROM users WHERE id = :id";
         $stmt = $this->connect()->prepare($sql);
         $stmt->bindParam(':id', $this->id);
+    try{
         if ($stmt->execute()) {
-        //hide the form
-        $this->logout();
-        echo '<div class="alert alert-danger">
-            your account has been deleted please sign up again.
-            <a class="btn btn-dark" href="signup.php">sign up</a>
-        </div>';
-        } else {
+            //call logout method
+            $this->logout();
+        }
+    }catch(PDOException $e){
             echo '<div class="alert alert-warning">
             something happened please try again.
         </div>';
         }
     }
-    
 }
