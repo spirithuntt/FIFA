@@ -173,8 +173,8 @@ class Userimp extends Database implements CRUD
                         $mail->isSMTP(); //Send using SMTP
                         $mail->Host = 'smtp.hostinger.com'; //Set the SMTP server to send through
                         $mail->SMTPAuth = true; //Enable SMTP authentication
-                        $mail->Username = 'contact@virtualprovision.ma'; //SMTP username
-                        $mail->Password = 'test@123A';
+                        $mail->Username = ''; //SMTP username
+                        $mail->Password = '';
                         // enable TLS encryption                          //SMTP password
                         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
                         //Enable implicit TLS encryption
@@ -302,8 +302,8 @@ class Userimp extends Database implements CRUD
                     $mail->isSMTP(); //Send using SMTP
                     $mail->Host = 'smtp.hostinger.com'; //Set the SMTP server to send through
                     $mail->SMTPAuth = true; //Enable SMTP authentication
-                    $mail->Username = 'contact@virtualprovision.ma'; //SMTP username
-                    $mail->Password = 'test@123A'; //SMTP password
+                    $mail->Username = ''; //SMTP username
+                    $mail->Password = ''; //SMTP password
                     //Enable implicit TLS encryption
                     $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
                     // Port 587 the default mail submission port. and will provide the best result
