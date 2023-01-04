@@ -1,5 +1,5 @@
 <?php
-// middleware to check if user is admin
+//  to check if user is admin
 class IslogedIn {
     public function __construct()
     {
