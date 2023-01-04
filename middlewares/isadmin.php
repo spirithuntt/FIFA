@@ -1,5 +1,5 @@
 <?php
-// is admin middleware
+// to check if its admin 
 class IsAdmin {
     public function __construct()
     {
