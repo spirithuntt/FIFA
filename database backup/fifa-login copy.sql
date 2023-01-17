@@ -43,7 +43,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `fname`, `lname`, `email`, `isadmin`, `isactive`, `token`, `password`) VALUES
-(7, 'imrane', 'chaibi', 'imranchaibi1@gmail.com', 0, 1, '924cf55cbe9200b0cbd736f925ae2388', '$2y$10$6vzJoHS2e5Rvrtp4uICwE.IVCtI8xfjUlScX/BEhmwo0QPlODvLQy');
+(7, 'nouhaila', 'housni', 'nouhaila.elhousnii@gmail.com', 0, 1, '924cf55cbe9200b0cbd736f925ae2388', '$2y$10$6vzJoHS2e5Rvrtp4uICwE.IVCtI8xfjUlScX/BEhmwo0QPlODvLQy');
 
 --
 -- Indexes for dumped tables
